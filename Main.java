@@ -42,16 +42,56 @@ public class Main {
                 System.out.println("Do you want to export the report to a .csv file? (y/n)");
                 String export = scanner.next();
                 if (export.equals("y")) {
-                    // TODO export
-                    
+                    exportToCSV(entities, field + "_" + order + "_sorted_entities_report");
                 }
             } else if (option == 5) {
-                // TODO SEARCH ENTITIES
+                System.out.println("Enter the field to search by (id,item_id,name,category,price,oldPrice):");
+                String field = scanner.next();
+                System.out.println("Enter the value to search for(id;item_id;name;category;price;oldPrice):");
+                String value = scanner.next();
+                IKEA.searchEntities(entities, field, value);
+                System.out.println("Do you want to export the report to a .csv file? (y/n)");
+                String export = scanner.next();
+                if (export.equals("y")) {
+                    exportToCSV(entities, "Search_report");
+                }
             }else if (option == 6) {
                 System.out.println("Enter the name of the file:");
-                //TODO: LIST COLUMN
+                String fileName = scanner.next();
+                IKEA.listColumnNames(fileName);
             } else if (option == 7) {
-                //TODO FILTER
+                System.out.println("Enter the field to filter by (id,item_id,name,category,price,oldPrice):");
+                String field = scanner.next();
+
+                System.out.println("Enter the rule you want to apply (contains, eq, gt, lt, ge, le, bt, null):");
+                String rule = scanner.next();
+
+                System.out.println("Enter the value you want to filter by (id,item_id,name,category,price,oldPrice):");
+                String value = scanner.next();
+
+                // filter the entities and store the result in a new list
+                List<IKEA> filteredEntities = IKEA.filterEntities(entities, field, rule, value);
+
+                // print the number of entities in the filtered list
+                System.out.println("Number of entities: " + filteredEntities.size());
+
+                // prompt user for which fields to display
+                System.out.println("Enter the fields you want to display, separated by a comma:");
+                String fieldsString = scanner.next();
+                String[] fields = fieldsString.split(",(?=([^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+
+                // display the values of the filtered entities
+                for (IKEA entity : filteredEntities) {
+                    entity.displayFields(fields);
+                }
+                System.out.println("Do you want to export the report to a CSV file? (y/n)");
+                String export = scanner.next();
+                if (export.equals("y")) {
+                    // generate a file name based on the request info
+                    String fileName = field + "_" + rule + "_" + value;
+                    // export the report to a CSV file
+                    exportToCSV(filteredEntities, fileName);
+                }
 
             }else if (option == 8) {
                 break;
@@ -123,6 +163,77 @@ public class Main {
         return entities;
     }
 
+    public static void exportToCSV(List<IKEA> entities, String fileName) {
+        try {
+            FileWriter writer = new FileWriter(fileName + ".csv");
+
+            // write the headers
+            writer.append("ID");
+            writer.append(",");
+            writer.append("Item ID");
+            writer.append(",");
+            writer.append("Name");
+            writer.append(",");
+            writer.append("Category");
+            writer.append(",");
+            writer.append("Price");
+            writer.append(",");
+            writer.append("Old_Price");
+            writer.append(",");
+            writer.append("Sellable_Online");
+            writer.append(",");
+            writer.append("Link");
+            writer.append(",");
+            writer.append("Other_Colors");
+            writer.append(",");
+            writer.append("Short_Description");
+            writer.append(",");
+            writer.append("Designer");
+            writer.append(",");
+            // other headers go here
+
+            writer.append("\n");
+
+            // write the data
+            for (IKEA entity : entities) {
+                writer.append(String.valueOf(entity.getId()));
+                writer.append(",");
+                writer.append(String.valueOf(entity.getItemId()));
+                writer.append(",");
+                writer.append(entity.getName());
+                writer.append(",");
+                writer.append(entity.getName());
+                writer.append(",");
+                writer.append(entity.getCategory());
+                writer.append(",");
+                writer.append(entity.getName());
+                writer.append(",");
+                writer.append(String.valueOf(entity.getPrice()));
+                writer.append(",");
+                writer.append(entity.getName());
+                writer.append(",");
+                writer.append(String.valueOf(entity.getOldPrice()));
+                writer.append(",");
+                writer.append(String.valueOf(entity.isSellableOnline()));
+                writer.append(",");
+                writer.append(String.valueOf(entity.getLink()));
+                writer.append(",");
+                writer.append(entity.getOtherColors());
+                writer.append(",");
+                writer.append(entity.getShortDescription());
+                writer.append(",");
+                writer.append(entity.getDesigner());
+                writer.append(",");
+                // other fields go here
+
+                writer.append("\n");
+            }
+
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
-
