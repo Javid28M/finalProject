@@ -183,6 +183,241 @@ public class IKEA {
             }
         }
     }
+    public static void searchEntities(List<IKEA> entities, String field, String value) {
+        for (IKEA entity : entities) {
+            if (field.equals("id")) {
+                if (entity.getId() == Integer.parseInt(value)) {
+                    System.out.println(entity.toString());
+                }
+            }
+            else if (field.equals("item_id")) {
+                if (entity.getItemId() == Integer.parseInt(value)) {
+                    System.out.println(entity.toString());
+                }
+            }
+            if (field.equals("name")) {
+                if (entity.getName().contains(value)) {
+                    System.out.println(entity.toString());
+                }
+            } else if (field.equals("category")) {
+                if (entity.getCategory().contains(value)) {
+                    System.out.println(entity.toString());
+                }
+            } else if (field.equals("price")) {
+                if (entity.getPrice() == Double.parseDouble(value)) {
+                    System.out.println(entity.toString());
+                }
+            } else if (field.equals("oldPrice")) {
+                if (entity.getOldPrice() == Double.parseDouble(value)) {
+                    System.out.println(entity.toString());
+                }
+            }
+        }
+    }
+
+    public static void listColumnNames(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            System.out.println(line);
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "IKEA{" +
+                "id=" + id +
+                ", itemId=" + itemId +
+                ", name='" + name + '\'' +
+                ", category='" + category + '\'' +
+                ", price=" + price +
+                ", oldPrice=" + oldPrice +
+                ", sellableOnline=" + sellableOnline +
+                ", link='" + link + '\'' +
+                ", otherColors='" + otherColors + '\'' +
+                ", shortDescription='" + shortDescription + '\'' +
+                ", designer='" + designer + '\'' +
+                '}';
+    }
+    public static List<IKEA> filterEntities(List<IKEA> entities, String field, String rule, String value) {
+        List<IKEA> filteredEntities = new ArrayList<>();
+        if (rule.equals("contains")) {
+            if (field.equals("name")) {
+                for (IKEA entity : entities) {
+                    if (entity.getName().contains(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("category")) {
+                for (IKEA entity : entities) {
+                    if (entity.getCategory().contains(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("otherColors")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOtherColors() != null && entity.getOtherColors().contains(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("shortDescription")) {
+                for (IKEA entity : entities) {
+                    if (entity.getShortDescription() != null && entity.getShortDescription().contains(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("link")) {
+                for (IKEA entity : entities) {
+                    if (entity.getLink() != null && entity.getLink().contains(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("designer")) {
+                for (IKEA entity : entities) {
+                    if (entity.getDesigner() != null && entity.getDesigner().contains(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("eq")) {
+            if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.getPrice() == Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOldPrice() == Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("gt")) {
+            if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.getPrice() > Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOldPrice() > Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("lt")) {
+            if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.getPrice() < Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOldPrice() < Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("ge")) {
+            if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.getPrice() >= Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOldPrice() >= Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("le")) {
+            if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.getPrice() <= Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOldPrice() <= Double.parseDouble(value)) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("bt")) {
+            String[] values = value.split(",(?=([^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+            if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.getPrice() >= Double.parseDouble(values[0]) && entity.getPrice() <= Double.parseDouble(values[1])) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOldPrice() >= Double.parseDouble(values[0]) && entity.getOldPrice() <= Double.parseDouble(values[1])) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        } else if (rule.equals("null")) {
+            if (field.equals("name")) {
+                for (IKEA entity : entities) {
+                    if (entity.getName() == null) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("category")) {
+                for (IKEA entity : entities) {
+                    if (entity.getCategory() == null) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("price")) {
+                for (IKEA entity : entities) {
+                    if (entity.price  == 0) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("oldPrice")) {
+                for (IKEA entity : entities) {
+                    if (entity.oldPrice == 0) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("sellableOnline")) {
+                for (IKEA entity : entities) {
+                    if (entity.isSellableOnline()) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("link")) {
+                for (IKEA entity : entities) {
+                    if (entity.getLink() == null) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("otherColors")) {
+                for (IKEA entity : entities) {
+                    if (entity.getOtherColors() == null) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            } else if (field.equals("shortDescription")) {
+                for (IKEA entity : entities) {
+                    if (entity.getShortDescription() == null) {
+                        filteredEntities.add(entity);
+                    }
+                }
+            }
+        }
+        return filteredEntities;
+    }
 
         public void displayFields() {
         System.out.println("Id: " + this.id);
@@ -232,4 +467,3 @@ public class IKEA {
     }
 
 }
-
